@@ -18,7 +18,6 @@ const planetImages = [
   marsImg,
   jupiterImg,
   venusImg,
-  moonImg,
   saturnImg,
   uranusImg,
   neptuneImg,
@@ -51,8 +50,8 @@ function SelectionPage() {
 
   const handleAddCategory = () => {
     if (newCategoryName.trim()) {
-      const colors = ['#A5B4FC', '#93C5FD', '#C4B5FD', '#FBBF24', '#FB923C', '#34D399'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      const colors = ['#2C2C2C'];
+      const randomColor = colors;
       addCategory(newCategoryName, randomColor);
       setNewCategoryName('');
       setShowNewCategory(false);
@@ -75,7 +74,7 @@ function SelectionPage() {
         </button>
         <button onClick={() => setShowNewCategory(true)} className="add-button">
           {/* ← ADJUST ADD (+) ICON SIZE HERE */}
-          <Plus size={20} />
+          <Plus size={30} />
         </button>
         <h2 className="select-subtitle">Pick your planet</h2>
       </div>
@@ -143,7 +142,7 @@ function SelectionPage() {
         style={{ backgroundColor: editMode ? '#EF4444' : '#2C2C2C' }}
       >
         {/* ← ADJUST FAB (TRASH/CLOSE) ICON SIZE HERE */}
-        {editMode ? <Plus size={24} /> : <Trash2 size={24} />}
+        {editMode ? <Plus size={15} /> : <Trash2 size={24} />}
       </button>
 
       {deleteConfirm && (
