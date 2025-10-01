@@ -1,0 +1,346 @@
+/* ==================== SELECT PAGE ==================== */
+.select-page {
+  min-height: 100vh;
+  background: #000000;
+  padding-bottom: 100px;
+  overflow-y: auto;
+}
+
+.select-header {
+  padding: 24px;
+  position: relative;
+  padding-bottom: 40px;
+  overflow: hidden;
+}
+
+.select-header::before {
+  content: '';
+  position: absolute;
+  top: -120px;  /* ← ADJUST MOON VERTICAL POSITION HERE: negative value moves up, positive moves down */
+  right: -50px;  /* ← ADJUST MOON HORIZONTAL POSITION HERE: negative value moves right, positive moves left */
+  width: 300px;  /* ← ADJUST MOON WIDTH HERE */
+  height: 300px;  /* ← ADJUST MOON HEIGHT HERE */
+  background: url('./assets/moon.jpg') no-repeat;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.select-welcome {
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.2;
+  margin: 0 0 80px 0;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  max-width: 280px;
+}
+
+.select-subtitle {
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.2;
+  margin: 0;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.user-avatar-button {
+  position: absolute;
+  top: 60px;  /* ← ADJUST USER ICON VERTICAL POSITION HERE */
+  right: 90px;  /* ← ADJUST USER ICON HORIZONTAL POSITION HERE */
+  width: 55px;  /* ← ADJUST USER ICON BUTTON WIDTH HERE */
+  height: 58px;  /* ← ADJUST USER ICON BUTTON HEIGHT HERE */
+  background: #2C2C2C;
+  border: 1px solid #2C2C2C;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F5F5F5;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-avatar-button:hover {
+  background: #1a1a1a;
+  transform: scale(1.05);
+}
+
+.add-button {
+  position: absolute;
+  top: 52px;  /* ← ADJUST ADD (+) BUTTON VERTICAL POSITION HERE */
+  right: 24px;  /* ← ADJUST ADD (+) BUTTON HORIZONTAL POSITION HERE */
+  width: 70px;  /* ← ADJUST ADD (+) BUTTON WIDTH HERE */
+  height: 70px;  /* ← ADJUST ADD (+) BUTTON HEIGHT HERE */
+  background: #020930;
+  border: 1px solid #2C2C2C;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F5F5F5;
+  cursor: pointer;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s;
+}
+
+.add-button:hover {
+  background: #020F59;
+  transform: scale(1.05);
+}
+
+.categories-grid {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .categories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.category-item {
+  position: relative;
+}
+
+.category-card {
+  width: 100%;
+  aspect-ratio: 1;  /* ← ADJUST CARD ASPECT RATIO HERE: 1 = square, 1.5 = wider rectangle */
+  border-radius: 20px;  /* ← ADJUST CARD CORNER ROUNDNESS HERE */
+  background: rgba(44, 44, 44, 0.7);
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;  /* ← ADJUST CARD INNER PADDING HERE */
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  background: rgba(44, 44, 44, 0.85);
+}
+
+.planet-image {
+  position: absolute;
+  top: -30px;  /* ← ADJUST PLANET IMAGE VERTICAL POSITION HERE: negative moves up, positive moves down */
+  right: -30px;  /* ← ADJUST PLANET IMAGE HORIZONTAL POSITION HERE: negative moves right, positive moves left */
+  width: 110px;  /* ← ADJUST PLANET IMAGE WIDTH HERE */
+  height: 110px;  /* ← ADJUST PLANET IMAGE HEIGHT HERE */
+  object-fit: cover;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.category-name {
+  color: white;
+  font-size: 1rem;  /* ← ADJUST CATEGORY NAME FONT SIZE HERE */
+  font-weight: 400;
+  line-height: 1.375;
+  text-align: left;
+  position: absolute;
+  bottom: 16px;  /* ← ADJUST CATEGORY NAME DISTANCE FROM BOTTOM HERE */
+  left: 16px;  /* ← ADJUST CATEGORY NAME DISTANCE FROM LEFT HERE */
+}
+
+.delete-category-btn {
+  position: absolute;
+  top: -16px;  /* ← ADJUST DELETE BUTTON VERTICAL POSITION HERE */
+  right: -16px;  /* ← ADJUST DELETE BUTTON HORIZONTAL POSITION HERE */
+  width: 53px;  /* ← ADJUST DELETE BUTTON WIDTH HERE */
+  height: 53px;  /* ← ADJUST DELETE BUTTON HEIGHT HERE */
+  background: #2C2C2C;
+  border: 1px solid #2C2C2C;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F5F5F5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s;
+}
+
+.delete-category-btn:hover {
+  background: #1a1a1a;
+  transform: scale(1.05);
+}
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-state p:first-child {
+  margin-bottom: 16px;
+  font-size: 1.125rem;
+}
+
+.empty-state-hint {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==================== MODAL ==================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  width: 100%;
+  max-width: 448px;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1F2937;
+  margin-bottom: 16px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: #C084FC;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn-cancel,
+.modal-btn-create {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn-cancel {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.modal-btn-cancel:hover {
+  background: #D1D5DB;
+}
+
+.modal-btn-create {
+  background: #9333EA;
+  color: white;
+}
+
+.modal-btn-create:hover {
+  background: #7E22CE;
+}
+
+.modal-btn-create:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== DELETE CONFIRMATION MODAL ==================== */
+.delete-confirm-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 24px 24px;
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+  text-align: center;
+}
+
+.delete-confirm-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  transition: all 0.2s;
+}
+
+.delete-confirm-close:hover {
+  background: #F3F4F6;
+  color: #000000;
+}
+
+.delete-confirm-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B7280;
+}
+
+.delete-confirm-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #1F2937;
+  margin-bottom: 24px;
+}
+
+.delete-confirm-btn {
+  background: #1F2937;
+  color: white;
+  padding: 12px 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-confirm-btn:hover {
+  background: #111827;
+  transform: scale(1.02);
+}

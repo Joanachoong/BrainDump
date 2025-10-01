@@ -1,0 +1,326 @@
+/* ==================== WHITEBOARD PAGE ==================== */
+.whiteboard-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0B0D21 0%, #1A1B3D 50%, #0B0D21 100%);
+  background-size: 100% 200%;
+  animation: galaxyShift 20s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.whiteboard-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent);
+  background-size: 200% 200%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@keyframes galaxyShift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 0% 100%; }
+}
+
+.whiteboard-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: rgba(11, 13, 33, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 30;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #E0E7FF;
+  font-weight: 500;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: #C7D2FE;
+}
+
+.whiteboard-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.3);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E0E7FF;
+  transition: all 0.2s;
+}
+
+.close-button:hover {
+  background: rgba(99, 102, 241, 0.5);
+  color: #FFFFFF;
+}
+
+.whiteboard-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;  /* ← ENABLES VERTICAL SCROLLING for unlimited ideas */
+  overflow-x: hidden;
+  min-height: 100%;
+  height: auto;  /* ← ALLOWS CONTENT to grow infinitely */
+}
+
+.input-section {
+  margin-bottom: 24px;
+}
+
+.idea-textarea {
+  width: 100%;
+  height: 192px;
+  padding: 16px;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  resize: none;
+  font-size: 1.125rem;
+  font-family: inherit;
+  outline: none;
+  background: rgba(30, 41, 59, 0.5);
+  color: #FFFFFF;
+  backdrop-filter: blur(10px);
+}
+
+.idea-textarea::placeholder {
+  color: rgba(226, 232, 240, 0.5);
+}
+
+.idea-textarea:focus {
+  border-color: #818CF8;
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.save-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.save-button:hover {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  transform: translateY(-2px);
+}
+
+.ideas-section {
+  margin-top: 24px;
+  padding-bottom: 100px;  /* ← ADDS SPACE at bottom for floating buttons */
+  min-height: auto;  /* ← ALLOWS SECTION to grow with content */
+}
+
+.ideas-header {
+  font-weight: 600;
+  color: #E0E7FF;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.empty-ideas {
+  text-align: center;
+  padding: 48px 0;
+  color: rgba(226, 232, 240, 0.6);
+}
+
+.empty-ideas p:first-child {
+  margin-bottom: 8px;
+}
+
+.empty-ideas-hint {
+  font-size: 0.875rem;
+  color: rgba(226, 232, 240, 0.4);
+}
+
+.idea-card {
+  padding: 16px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  margin-bottom: 12px;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.idea-card:hover {
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.idea-content {
+  color: #E2E8F0;
+  padding-right: 32px;
+  margin-bottom: 8px;
+}
+
+.idea-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.idea-meta {
+  font-size: 0.75rem;
+  color: #94A3B8;
+}
+
+.delete-idea-btn {
+  color: #F87171;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.idea-card:hover .delete-idea-btn {
+  opacity: 1;
+}
+
+.delete-idea-btn:hover {
+  color: #FCA5A5;
+}
+
+/* ==================== TOOLBAR ==================== */
+.toolbar-expanded {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+  z-index: 40;
+}
+
+.toolbar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.toolbar-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.2s;
+}
+
+.toolbar-btn-primary {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+}
+
+.toolbar-btn-primary:hover {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  transform: scale(1.05);
+}
+
+.toolbar-btn-voice {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+.toolbar-btn-voice:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+.toolbar-btn-recording {
+  background: #EF4444;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.toolbar-btn-secondary {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.toolbar-btn-secondary:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* ==================== RECORDING INDICATOR ==================== */
+.recording-indicator {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  z-index: 45;
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
