@@ -1,6 +1,8 @@
 /* ==================== SELECT PAGE ==================== */
 .select-page {
-  min-height: 100vh;
+  /*min-height: 100vh;*/
+  width: 1742px;
+  height: 844px;
   background: #000000;
   padding-bottom: 100px;
   overflow-y: auto;
@@ -16,38 +18,69 @@
 .select-header::before {
   content: '';
   position: absolute;
-  top: -150px;  /* ← ADJUST MOON VERTICAL POSITION HERE: negative value moves up, positive moves down */
-  left: 50%;  /* ← ADJUST MOON HORIZONTAL POSITION HERE: negative value moves right, positive moves left */
-  transform: translateX(-50%);
-  width: 300px;  /* ← ADJUST MOON WIDTH HERE */
-  height: 300px;  /* ← ADJUST MOON HEIGHT HERE */
-  background: url('./assets/planet/moon.jpg') no-repeat;
+  top: -32px;  /* ← ADJUST MOON VERTICAL POSITION HERE */
+  left: 448px;  /* ← ADJUST MOON HORIZONTAL POSITION HERE */
+  width: 899px;  /* ← ADJUST MOON WIDTH HERE */
+  height: 285px;  /* ← ADJUST MOON HEIGHT HERE */
+  background: url('./assets/planet/moon.png') no-repeat;
   background-size: cover;  /* ← ADJUST MOON IMAGE SIZE HERE */
   background-position: center;
   pointer-events: none;
   opacity: 0.6;
   z-index: 0;
+  animation: moonFloat 8s ease-in-out infinite;
+}
+
+/* Moon floating animation */
+@keyframes moonFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(-50%) translateY(-15px);
+    opacity: 0.7;
+  }
+}
+
+.sun-image {
+  position: absolute;
+  left: 441px;  /* ← ADJUST SUN HORIZONTAL POSITION HERE */
+  top: 516px;  /* ← ADJUST SUN VERTICAL POSITION HERE */
+  width: 330px;  /* ← ADJUST SUN WIDTH HERE */
+  height: 612px;  /* ← ADJUST SUN HEIGHT HERE */
+  border: 1px solid transparent;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .select-welcome {
-  font-size: 3rem;
+  width: 273px;
+  height: 108px;
+  font-size: 48px;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.2;
-  margin: 0 0 80px 0;
+  color: rgba(255, 255, 255, 0.70);
+  line-height: 57.6px;
+  word-wrap: break-word;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  max-width: 280px;
+  margin: 0 0 80px 0;
   position: relative;
   z-index: 1;
 }
 
 .select-subtitle {
-  font-size: 3rem;
+  width: 384px;
+  height: 62px;
+  text-align: center;
+  font-size: 48px;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.2;
-  margin: 0;
+  color: rgba(255, 255, 255, 0.70);
+  line-height: 57.6px;
+  word-wrap: break-word;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0;
   position: relative;
   z-index: 1;
 }
@@ -99,30 +132,20 @@
 
 .categories-grid {
   padding: 0 24px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-@media (min-width: 768px) {
-  .categories-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .categories-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding-left: 36px;
 }
 
 .category-item {
   position: relative;
+  overflow: visible;  /* ← Allow planet to extend outside item bounds */
 }
 
 .category-card {
-  width: 100%;
-  aspect-ratio: 1.3;  /* ← ADJUST CARD ASPECT RATIO HERE: 1 = square, 1.5 = wider rectangle */
+  width: 179px;  /* ← ADJUST CARD WIDTH HERE */
+  height: 157px;  /* ← ADJUST CARD HEIGHT HERE */
   border-radius: 20px;  /* ← ADJUST CARD CORNER ROUNDNESS HERE */
   background: rgba(44, 44, 44, 0.7);
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
@@ -135,24 +158,64 @@
   padding: 16px;  /* ← ADJUST CARD INNER PADDING HERE */
   transition: all 0.2s;
   position: relative;
-  overflow: hidden;
+  overflow: visible;  /* ← CHANGED: Allow planet to overflow outside card */
 }
 
 .category-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.8),
+              0 0 50px rgba(139, 92, 246, 0.5),
+              0 8px 15px rgba(0, 0, 0, 0.4);
   background: rgba(44, 44, 44, 0.85);
+  border: 2px solid rgba(99, 102, 241, 0.6);
 }
 
 .planet-image {
   position: absolute;
-  top: -60px;  /* ← ADJUST PLANET IMAGE VERTICAL POSITION HERE: negative moves up, positive moves down */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;  /* ← ADJUST PLANET IMAGE WIDTH HERE */
-  height: 140px;  /* ← ADJUST PLANET IMAGE HEIGHT HERE */
-  object-fit: cover;
+  top: -60px;  /* ← ADJUST: Negative value positions planet ABOVE the card */
+  right: -40px;  /* ← ADJUST: Negative value positions planet OUTSIDE right edge */
+  width: 150px;  /* ← ADJUST PLANET IMAGE WIDTH HERE */
+  height: 150px;  /* ← ADJUST PLANET IMAGE HEIGHT HERE */
+  object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  z-index: 10;  /* ← Ensures planet appears above card content */
+  pointer-events: none;  /* ← Prevents planet from blocking card clicks */
+  animation: planetFloat 6s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+/* Floating animation for planets */
+@keyframes planetFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+}
+
+/* Planet glow effect on card hover */
+.category-card:hover .planet-image {
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.6))
+          drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transform: scale(1.1) rotate(5deg);
+  animation-play-state: paused;
+}
+
+/* Subtle pulse animation */
+@keyframes planetPulse {
+  0%, 100% {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4)) brightness(1.1);
+  }
 }
 
 .category-name {
@@ -166,6 +229,29 @@
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
+}
+
+.category-name-input {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.375;
+  text-align: center;
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.category-name-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .delete-category-btn {

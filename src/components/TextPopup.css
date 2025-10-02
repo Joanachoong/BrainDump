@@ -40,3 +40,29 @@
   height: 48px;
   object-fit: contain;
 }
+
+.font-size-select {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.font-size-select:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.font-size-select:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.font-size-select option {
+  background: #5C5C5C;
+  color: white;
+}

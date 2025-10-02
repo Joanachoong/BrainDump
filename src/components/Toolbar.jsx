@@ -4,16 +4,12 @@ import './Toolbar.css';
 import NavigationIcon from '../assets/Toolbar_control/Navigation.png';
 import ImageIcon from '../assets/Toolbar_control/Image.png';
 import TypeIcon from '../assets/Toolbar_control/Type.png';
-import MicIcon from '../assets/Toolbar_control/Mic.png';
 import ShapeIcon from '../assets/Toolbar_control/Shape.png';
 import TrashIcon from '../assets/Toolbar_control/Trash 7.png';
 
 function Toolbar({
   tool,
   setTool,
-  isRecording,
-  startRecording,
-  stopRecording,
   onImageUpload,
   onDelete,
   showTextPopup,
@@ -74,14 +70,6 @@ function Toolbar({
           title="Text"
         >
           <img src={TypeIcon} alt="Text" className="toolbar-icon-48" />
-        </button>
-
-        <button
-          className={`toolbar-icon-btn ${isRecording ? 'recording' : ''}`}
-          onClick={isRecording ? stopRecording : startRecording}
-          title="Audio"
-        >
-          <img src={MicIcon} alt="Audio" className="toolbar-icon-48" />
         </button>
 
         <button

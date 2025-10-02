@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Plus, Trash2, User } from 'lucide-react';
+import { Plus, Trash2, User, X } from 'lucide-react';
 import { AppContext } from './App';
 import './SelectionPage.css';
 
@@ -7,11 +7,13 @@ import './SelectionPage.css';
 import marsImg from './assets/planet/mars.png';
 import jupiterImg from './assets/planet/jupiter.png';
 import venusImg from './assets/planet/venus.png';
-import moonImg from './assets/planet/moon.jpg';
+import moonImg from './assets/planet/moon.png';
 import saturnImg from './assets/planet/saturn.png';
 import uranusImg from './assets/planet/uranus.png';
 import neptuneImg from './assets/planet/neptune.png';
 import earthImg from './assets/planet/earth.png';
+import mercuryImg from './assets/planet/mercury.png';
+import sunImg from './assets/planet/sun.png';
 
 // Planet images array
 const planetImages = [
@@ -25,10 +27,44 @@ const planetImages = [
 ];
 
 // Category Card Component
-function CategoryCard({ category, onClick, planetIndex }) {
+function CategoryCard({ category, onClick, planetIndex, onRename }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(category.name);
+
+  const handleDoubleClick = (e) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setEditName(category.name);
+  };
+
+  const handleSave = () => {
+    if (editName.trim()) {
+      onRename(category.id, editName.trim());
+      setIsEditing(false);
+    } else {
+      setEditName(category.name);
+      setIsEditing(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      setEditName(category.name);
+      setIsEditing(false);
+    }
+  };
+
+  const handleClick = (e) => {
+    if (!isEditing) {
+      onClick(e);
+    }
+  };
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="category-card"
     >
       <img
@@ -36,17 +72,39 @@ function CategoryCard({ category, onClick, planetIndex }) {
         alt={category.name}
         className="planet-image"
       />
-      <span className="category-name">{category.name}</span>
+      {isEditing ? (
+        <input
+          type="text"
+          value={editName}
+          onChange={(e) => setEditName(e.target.value)}
+          onKeyDown={handleKeyPress}
+          onBlur={handleSave}
+          className="category-name-input"
+          autoFocus
+          onClick={(e) => e.stopPropagation()}
+        />
+      ) : (
+        <span
+          className="category-name"
+          onDoubleClick={handleDoubleClick}
+        >
+          {category.name}
+        </span>
+      )}
     </button>
   );
 }
 
 function SelectionPage() {
-  const { categories, navigate, addCategory, deleteCategory } = useContext(AppContext);
+  const { categories, navigate, addCategory, updateCategory, deleteCategory } = useContext(AppContext);
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  const handleRenameCategory = (id, newName) => {
+    updateCategory(id, { name: newName });
+  };
 
   const handleAddCategory = () => {
     if (newCategoryName.trim()) {
@@ -67,6 +125,7 @@ function SelectionPage() {
   return (
     <div className="select-page">
       <div className="select-header">
+        <img src={sunImg} alt="Sun" className="sun-image" />
         <h1 className="select-welcome">Welcome , username</h1>
         <button className="user-avatar-button">
           {/* ← ADJUST USER ICON SIZE HERE */}
@@ -86,6 +145,7 @@ function SelectionPage() {
               category={category}
               onClick={() => navigate('whiteboard', category)}
               planetIndex={index}
+              onRename={handleRenameCategory}
             />
             {editMode && (
               <button

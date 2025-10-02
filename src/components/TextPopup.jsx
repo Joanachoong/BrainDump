@@ -18,6 +18,10 @@ function TextPopup({ onFormatChange, textFormat }) {
     onFormatChange({ ...textFormat, italic: !textFormat.italic });
   };
 
+  const handleFontSizeChange = (e) => {
+    onFormatChange({ ...textFormat, fontSize: parseInt(e.target.value) });
+  };
+
   return (
     <div className="text-popup">
       <button
@@ -43,6 +47,26 @@ function TextPopup({ onFormatChange, textFormat }) {
       >
         <img src={ItalicIcon} alt="Italic" className="text-icon-48" />
       </button>
+
+      <select
+        className="font-size-select"
+        value={textFormat.fontSize || 16}
+        onChange={handleFontSizeChange}
+        title="Font Size"
+      >
+        <option value="12">12px</option>
+        <option value="14">14px</option>
+        <option value="16">16px</option>
+        <option value="18">18px</option>
+        <option value="20">20px</option>
+        <option value="24">24px</option>
+        <option value="28">28px</option>
+        <option value="32">32px</option>
+        <option value="36">36px</option>
+        <option value="48">48px</option>
+        <option value="64">64px</option>
+        <option value="72">72px</option>
+      </select>
     </div>
   );
 }

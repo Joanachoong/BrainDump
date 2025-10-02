@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { ArrowLeft, X } from 'lucide-react';
+import { useState, useContext, useRef, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { AppContext } from './App';
 import Toolbar from './components/Toolbar';
 import TextPopup from './components/TextPopup';
 import ShapePopup from './components/ShapePopup';
-import ZoomControls from './components/ZoomControls';
+import KeyboardShortcutsHelp from './components/KeyboardShortcutsHelp';
 import './WhiteboardPage.css';
 
 function WhiteboardPage() {
@@ -21,128 +21,102 @@ function WhiteboardPage() {
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isDrawingArrow, setIsDrawingArrow] = useState(false);
+  const [arrowStart, setArrowStart] = useState(null);
+  const [lastTouchDistance, setLastTouchDistance] = useState(null);
+  const [lastTouchCenter, setLastTouchCenter] = useState(null);
 
   // Popup states
   const [showTextPopup, setShowTextPopup] = useState(false);
   const [showShapePopup, setShowShapePopup] = useState(false);
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
 
   // Text formatting state
   const [textFormat, setTextFormat] = useState({
     bold: false,
     underline: false,
-    italic: false
+    italic: false,
+    fontSize: 16
   });
-
-  // Voice recording state
-  const [isRecording, setIsRecording] = useState(false);
-  const [recognition, setRecognition] = useState(null);
-  const [interimTranscript, setInterimTranscript] = useState('');
-  const [accumulatedTranscript, setAccumulatedTranscript] = useState('');
 
   const canvasRef = useRef(null);
   const [nextId, setNextId] = useState(1);
-  const recognitionRef = useRef(null);
-  const isStoppingRef = useRef(false);
 
-  // Initialize speech recognition
+  // Keyboard shortcuts
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
-      recognitionInstance.continuous = true;
-      recognitionInstance.interimResults = true;
-      recognitionInstance.lang = 'en-US';
-      recognitionInstance.maxAlternatives = 1;
-
-      recognitionInstance.onresult = (event) => {
-        let interim = '';
-        let final = '';
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            final += transcript + ' ';
-          } else {
-            interim += transcript;
-          }
+    const handleKeyDown = (e) => {
+      // Text formatting shortcuts
+      if ((e.ctrlKey || e.metaKey)) {
+        if (e.key === 'b' || e.key === 'B') {
+          e.preventDefault();
+          setTextFormat(prev => ({ ...prev, bold: !prev.bold }));
         }
+        if (e.key === 'i' || e.key === 'I') {
+          e.preventDefault();
+          setTextFormat(prev => ({ ...prev, italic: !prev.italic }));
+        }
+        if (e.key === 'u' || e.key === 'U') {
+          e.preventDefault();
+          setTextFormat(prev => ({ ...prev, underline: !prev.underline }));
+        }
+        // Select all
+        if (e.key === 'a' || e.key === 'A') {
+          e.preventDefault();
+          // Select all elements logic would go here
+        }
+        // Delete
+        if (e.key === 'd' || e.key === 'D') {
+          e.preventDefault();
+          // Duplicate selected element logic would go here
+        }
+      }
 
-        if (final) {
-          // Accumulate final results instead of creating immediately
-          setAccumulatedTranscript(prev => prev + final);
-          setInterimTranscript('');
+      // Delete selected element
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedElement && !e.target.matches('textarea, input')) {
+          e.preventDefault();
+          deleteSelectedElement();
+        }
+      }
+
+      // Deselect all
+      if (e.key === 'Escape') {
+        if (showShortcutsHelp) {
+          setShowShortcutsHelp(false);
         } else {
-          setInterimTranscript(interim);
+          setSelectedElement(null);
+          setShowTextPopup(false);
+          setShowShapePopup(false);
         }
-      };
+      }
 
-      recognitionInstance.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
+      // Show keyboard shortcuts help
+      if (e.key === '?' || (e.ctrlKey && e.key === '/')) {
+        e.preventDefault();
+        setShowShortcutsHelp(prev => !prev);
+      }
 
-        // Handle network errors by restarting
-        if (event.error === 'network' && isRecording && !isStoppingRef.current) {
-          console.log('Network error, restarting recognition...');
-          setTimeout(() => {
-            if (recognitionRef.current && isRecording) {
-              try {
-                recognitionRef.current.start();
-              } catch (e) {
-                console.error('Failed to restart recognition:', e);
-              }
-            }
-          }, 100);
-        } else if (event.error === 'aborted' && isRecording && !isStoppingRef.current) {
-          // Restart if aborted unexpectedly
-          setTimeout(() => {
-            if (recognitionRef.current && isRecording) {
-              try {
-                recognitionRef.current.start();
-              } catch (e) {
-                console.error('Failed to restart recognition:', e);
-              }
-            }
-          }, 100);
-        } else {
-          setIsRecording(false);
-          if (accumulatedTranscript.trim()) {
-            createTextElement(accumulatedTranscript.trim());
-          }
-          setAccumulatedTranscript('');
-          setInterimTranscript('');
+      // Tool shortcuts
+      if (!e.ctrlKey && !e.metaKey && !e.target.matches('textarea, input')) {
+        if (e.key === 'v' || e.key === 'V') {
+          setTool('navigate');
         }
-      };
-
-      recognitionInstance.onend = () => {
-        console.log('Recognition ended');
-
-        // Auto-restart if still recording (unless manually stopped)
-        if (isRecording && !isStoppingRef.current) {
-          console.log('Auto-restarting recognition...');
-          setTimeout(() => {
-            if (recognitionRef.current && isRecording) {
-              try {
-                recognitionRef.current.start();
-              } catch (e) {
-                console.error('Failed to restart recognition:', e);
-              }
-            }
-          }, 100);
-        } else {
-          // Only create text element when actually stopping
-          setIsRecording(false);
-          if (accumulatedTranscript.trim()) {
-            createTextElement(accumulatedTranscript.trim());
-          }
-          setAccumulatedTranscript('');
-          setInterimTranscript('');
-          isStoppingRef.current = false;
+        if (e.key === 't' || e.key === 'T') {
+          setTool('text');
+          setShowTextPopup(true);
         }
-      };
+        if (e.key === 's' || e.key === 'S') {
+          setShowShapePopup(true);
+        }
+        if (e.key === 'h' || e.key === 'H') {
+          setTool('navigate');
+        }
+      }
+    };
 
-      setRecognition(recognitionInstance);
-      recognitionRef.current = recognitionInstance;
-    }
-  }, []);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [selectedElement, showShortcutsHelp]);
 
   const createTextElement = (text = 'Enter your Text') => {
     const newElement = {
@@ -158,7 +132,8 @@ function WhiteboardPage() {
       rotation: 0,
       bold: textFormat.bold,
       underline: textFormat.underline,
-      italic: textFormat.italic
+      italic: textFormat.italic,
+      fontSize: textFormat.fontSize
     };
     setElements([...elements, newElement]);
     setNextId(nextId + 1);
@@ -166,15 +141,23 @@ function WhiteboardPage() {
   };
 
   const createShape = (shapeType) => {
+    if (shapeType === 'arrow') {
+      // Enable arrow drawing mode instead of creating default arrow
+      setTool('arrow');
+      setShowShapePopup(false);
+      return;
+    }
+
     const newElement = {
       id: nextId,
       type: shapeType,
       x: 200 + (nextId * 10),
       y: 200 + (nextId * 10),
-      width: 100,
-      height: 100,
+      width: 500,
+      height: 500,
       color: '#6366F1',
       text: '',
+      fontSize: 24, // Default font size for shapes
       zIndex: nextId,
       rotation: 0
     };
@@ -188,17 +171,22 @@ function WhiteboardPage() {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const maxSize = 300;
+        // Calculate 10% of typical canvas size (1920x1080)
+        const minCanvasSize = Math.min(window.innerWidth, window.innerHeight);
+        const minImageSize = minCanvasSize * 0.1; // 10% of canvas
+
         let width = img.width;
         let height = img.height;
+        const aspectRatio = width / height;
 
-        if (width > maxSize || height > maxSize) {
-          if (width > height) {
-            height = (height / width) * maxSize;
-            width = maxSize;
+        // Ensure image is at least 10% of canvas size
+        if (width < minImageSize && height < minImageSize) {
+          if (aspectRatio >= 1) {
+            width = minImageSize;
+            height = minImageSize / aspectRatio;
           } else {
-            width = (width / height) * maxSize;
-            height = maxSize;
+            height = minImageSize;
+            width = minImageSize * aspectRatio;
           }
         }
 
@@ -219,33 +207,6 @@ function WhiteboardPage() {
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
-  };
-
-  const startRecording = () => {
-    if (recognition) {
-      try {
-        isStoppingRef.current = false;
-        setAccumulatedTranscript(''); // Reset accumulated transcript
-        setInterimTranscript('');
-        setIsRecording(true);
-        recognition.start();
-        console.log('Recording started');
-      } catch (error) {
-        console.error('Error starting recognition:', error);
-        setIsRecording(false);
-      }
-    } else {
-      alert('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
-    }
-  };
-
-  const stopRecording = () => {
-    if (recognition && isRecording) {
-      console.log('Stopping recording...');
-      isStoppingRef.current = true; // Prevent auto-restart
-      recognition.stop();
-      // The onend handler will create the text element with accumulated transcript
-    }
   };
 
   const deleteSelectedElement = () => {
@@ -279,6 +240,10 @@ function WhiteboardPage() {
         setIsDragging(true);
         setDragStart({ x: x - clickedElement.x, y: y - clickedElement.y });
       }
+    } else if (tool === 'arrow') {
+      setIsDrawingArrow(true);
+      setArrowStart({ x, y });
+      setSelectedElement(null);
     } else if (tool === 'navigate' || !tool) {
       setSelectedElement(null);
       setIsPanning(true);
@@ -358,7 +323,43 @@ function WhiteboardPage() {
     }
   };
 
-  const handleCanvasMouseUp = () => {
+  const handleCanvasMouseUp = (e) => {
+    if (isDrawingArrow && arrowStart) {
+      const rect = canvasRef.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left - pan.x) / zoom;
+      const y = (e.clientY - rect.top - pan.y) / zoom;
+
+      // Calculate arrow dimensions
+      const startX = Math.min(arrowStart.x, x);
+      const startY = Math.min(arrowStart.y, y);
+      const width = Math.abs(x - arrowStart.x);
+      const height = Math.abs(y - arrowStart.y);
+
+      // Only create arrow if it has minimum size
+      if (width > 10 || height > 10) {
+        const newElement = {
+          id: nextId,
+          type: 'arrow',
+          x: startX,
+          y: startY,
+          width: Math.max(width, 50),
+          height: Math.max(height, 50),
+          color: '#6366F1',
+          text: '',
+          zIndex: nextId,
+          rotation: 0,
+          startPoint: { x: arrowStart.x, y: arrowStart.y },
+          endPoint: { x, y }
+        };
+        setElements([...elements, newElement]);
+        setNextId(nextId + 1);
+      }
+
+      setIsDrawingArrow(false);
+      setArrowStart(null);
+      setTool('navigate');
+    }
+
     setIsDragging(false);
     setIsPanning(false);
     setIsResizing(false);
@@ -371,9 +372,64 @@ function WhiteboardPage() {
     setZoom(Math.min(Math.max(zoom * delta, 0.25), 4));
   };
 
+  // Trackpad gesture handlers
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      const centerX = (touch1.clientX + touch2.clientX) / 2;
+      const centerY = (touch1.clientY + touch2.clientY) / 2;
+      setLastTouchDistance(distance);
+      setLastTouchCenter({ x: centerX, y: centerY });
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && lastTouchDistance) {
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      const centerX = (touch1.clientX + touch2.clientX) / 2;
+      const centerY = (touch1.clientY + touch2.clientY) / 2;
+
+      // Pinch to zoom
+      const zoomDelta = distance / lastTouchDistance;
+      setZoom(prev => Math.min(Math.max(prev * zoomDelta, 0.25), 4));
+
+      // Two-finger pan
+      if (lastTouchCenter) {
+        const dx = centerX - lastTouchCenter.x;
+        const dy = centerY - lastTouchCenter.y;
+        setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+      }
+
+      setLastTouchDistance(distance);
+      setLastTouchCenter({ x: centerX, y: centerY });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setLastTouchDistance(null);
+    setLastTouchCenter(null);
+  };
+
   const updateElementText = (id, text) => {
     setElements(elements.map(el =>
       el.id === id ? { ...el, text } : el
+    ));
+  };
+
+  const updateElementFontSize = (id, fontSize) => {
+    setElements(elements.map(el =>
+      el.id === id ? { ...el, fontSize } : el
     ));
   };
 
@@ -448,7 +504,8 @@ function WhiteboardPage() {
     const textStyle = {
       fontWeight: element.bold ? 'bold' : 'normal',
       textDecoration: element.underline ? 'underline' : 'none',
-      fontStyle: element.italic ? 'italic' : 'normal'
+      fontStyle: element.italic ? 'italic' : 'normal',
+      fontSize: element.fontSize ? `${element.fontSize}px` : '16px'
     };
 
     return (
@@ -507,10 +564,6 @@ function WhiteboardPage() {
         </button>
 
         <h1 className="freeform-title">{selectedCategory?.name || 'Untitled Board'}</h1>
-
-        <button onClick={() => navigate('select')} className="close-button">
-          <X size={20} />
-        </button>
       </div>
 
       {/* Canvas */}
@@ -522,7 +575,10 @@ function WhiteboardPage() {
         onMouseUp={handleCanvasMouseUp}
         onMouseLeave={handleCanvasMouseUp}
         onWheel={handleWheel}
-        style={{ cursor: tool === 'navigate' ? 'grab' : isPanning ? 'grabbing' : 'default' }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ cursor: tool === 'arrow' ? 'crosshair' : tool === 'navigate' ? 'grab' : isPanning ? 'grabbing' : 'default' }}
       >
         <div
           className="canvas-viewport"
@@ -553,9 +609,6 @@ function WhiteboardPage() {
       <Toolbar
         tool={tool}
         setTool={setTool}
-        isRecording={isRecording}
-        startRecording={startRecording}
-        stopRecording={stopRecording}
         onImageUpload={createImageElement}
         onDelete={deleteSelectedElement}
         showTextPopup={showTextPopup}
@@ -564,20 +617,9 @@ function WhiteboardPage() {
         setShowShapePopup={setShowShapePopup}
       />
 
-      {/* Zoom Controls Component */}
-      <ZoomControls zoom={zoom} setZoom={setZoom} />
-
-      {/* Recording Indicator */}
-      {isRecording && (
-        <div className="recording-indicator">
-          <div className="recording-dot"></div>
-          <span>
-            Recording...
-            {(accumulatedTranscript || interimTranscript) &&
-              ` "${accumulatedTranscript}${interimTranscript}"`
-            }
-          </span>
-        </div>
+      {/* Keyboard Shortcuts Help */}
+      {showShortcutsHelp && (
+        <KeyboardShortcutsHelp onClose={() => setShowShortcutsHelp(false)} />
       )}
     </div>
   );

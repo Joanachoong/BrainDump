@@ -93,6 +93,12 @@ function AppProvider({ children }) {
     setCategories([...categories, newCategory]);
   };
 
+  const updateCategory = (id, updates) => {
+    setCategories(categories.map(cat =>
+      cat.id === id ? { ...cat, ...updates } : cat
+    ));
+  };
+
   const deleteCategory = (id) => {
     setCategories(categories.filter(cat => cat.id !== id));
     setIdeas(ideas.filter(idea => idea.categoryId !== id));
@@ -135,6 +141,7 @@ function AppProvider({ children }) {
     showToolbar,
     setShowToolbar,
     addCategory,
+    updateCategory,
     deleteCategory,
     addIdea,
     deleteIdea,

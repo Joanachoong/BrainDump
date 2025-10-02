@@ -135,10 +135,10 @@
 
 .delete-element {
   position: absolute;
-  top: -12px;
-  right: -12px;
-  width: 24px;
-  height: 24px;
+  top: -16px;
+  right: -16px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #EF4444;
   border: 2px solid white;
@@ -152,28 +152,38 @@
 
 .delete-element:hover {
   background: #DC2626;
-  transform: scale(1.1);
+  transform: scale(1.125);
 }
 
 /* Resize Handles */
 .resize-handle {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #6366F1;
-  border: 2px solid white;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 2px solid #333;
   border-radius: 50%;
   z-index: 10;
+  transition: transform 0.2s;
 }
 
-.resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
-.resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
-.resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
-.resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
-.resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
-.resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
-.resize-handle.w { top: 50%; left: -5px; transform: translateY(-50%); cursor: w-resize; }
-.resize-handle.e { top: 50%; right: -5px; transform: translateY(-50%); cursor: e-resize; }
+.resize-handle:hover {
+  transform: scale(1.25);
+}
+
+.resize-handle.nw { top: -8px; left: -8px; cursor: nw-resize; }
+.resize-handle.ne { top: -8px; right: -8px; cursor: ne-resize; }
+.resize-handle.sw { bottom: -8px; left: -8px; cursor: sw-resize; }
+.resize-handle.se { bottom: -8px; right: -8px; cursor: se-resize; }
+.resize-handle.n { top: -8px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
+.resize-handle.s { bottom: -8px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+.resize-handle.w { top: 50%; left: -8px; transform: translateY(-50%); cursor: w-resize; }
+.resize-handle.e { top: 50%; right: -8px; transform: translateY(-50%); cursor: e-resize; }
+
+.resize-handle.n:hover,
+.resize-handle.s:hover { transform: translateX(-50%) scale(1.25); }
+.resize-handle.w:hover,
+.resize-handle.e:hover { transform: translateY(-50%) scale(1.25); }
 
 /* Image Element */
 .element-image {

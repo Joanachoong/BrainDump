@@ -24,13 +24,15 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 8px; /* Increased from 4px to create 56px hit area for 48px icon */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   border-radius: 8px;
   position: relative;
+  min-width: 56px;
+  min-height: 56px;
 }
 
 .toolbar-icon-btn:hover {
