@@ -21,7 +21,7 @@
   transform: translateX(-50%);
   width: 300px;  /* ← ADJUST MOON WIDTH HERE */
   height: 300px;  /* ← ADJUST MOON HEIGHT HERE */
-  background: url('./assets/moon.jpg') no-repeat;
+  background: url('./assets/planet/moon.jpg') no-repeat;
   background-size: cover;  /* ← ADJUST MOON IMAGE SIZE HERE */
   background-position: center;
   pointer-events: none;

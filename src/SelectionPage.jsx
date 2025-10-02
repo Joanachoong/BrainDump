@@ -4,14 +4,14 @@ import { AppContext } from './App';
 import './SelectionPage.css';
 
 // Import planet images
-import marsImg from './assets/mars.png';
-import jupiterImg from './assets/jupiter.png';
-import venusImg from './assets/venus.png';
-import moonImg from './assets/moon.jpg';
-import saturnImg from './assets/saturn.png';
-import uranusImg from './assets/uranus.png';
-import neptuneImg from './assets/neptune.png';
-import earthImg from './assets/earth.png';
+import marsImg from './assets/planet/mars.png';
+import jupiterImg from './assets/planet/jupiter.png';
+import venusImg from './assets/planet/venus.png';
+import moonImg from './assets/planet/moon.jpg';
+import saturnImg from './assets/planet/saturn.png';
+import uranusImg from './assets/planet/uranus.png';
+import neptuneImg from './assets/planet/neptune.png';
+import earthImg from './assets/planet/earth.png';
 
 // Planet images array
 const planetImages = [

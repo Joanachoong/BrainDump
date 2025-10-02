@@ -22,7 +22,7 @@
   width: 120%;
   max-width: 800px;
   height: 800px;
-  background: url('./assets/earth.jpg') center bottom no-repeat;
+  background: url('./assets/planet/earth.jpg') center bottom no-repeat;
   background-size: contain;
   pointer-events: none;
   z-index: 0;

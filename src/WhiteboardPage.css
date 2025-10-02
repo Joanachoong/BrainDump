@@ -155,6 +155,34 @@
   transform: scale(1.1);
 }
 
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #6366F1;
+  border: 2px solid white;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+.resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+.resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+.resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+.resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
+.resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+.resize-handle.w { top: 50%; left: -5px; transform: translateY(-50%); cursor: w-resize; }
+.resize-handle.e { top: 50%; right: -5px; transform: translateY(-50%); cursor: e-resize; }
+
+/* Image Element */
+.element-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
 /* Toolbar */
 .freeform-toolbar {
   position: fixed;
@@ -276,6 +304,123 @@
   animation: pulse 1.5s ease-in-out infinite;
 }
 
+/* Custom Zoom Controls - Bottom Right */
+.zoom-controls-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.zoom-control-btn {
+  width: 48px;
+  height: 48px;
+  background: rgba(44, 44, 44, 0.70);
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.zoom-control-btn:hover:not(.disabled) {
+  background: rgba(54, 54, 54, 0.80);
+}
+
+.zoom-control-btn.active {
+  animation: crossDissolve 0.4s ease;
+}
+
+@keyframes crossDissolve {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.zoom-control-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Zoom Icon Inner Button */
+.zoom-control-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #5C5C5C;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  z-index: 0;
+}
+
+/* Plus Icon for Zoom In */
+.zoom-icon-plus {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.plus-horizontal,
+.plus-vertical {
+  position: absolute;
+  background: #767676;
+  outline: 2px #767676 solid;
+  outline-offset: -1px;
+}
+
+.plus-horizontal {
+  width: 28px;
+  height: 4px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.plus-vertical {
+  width: 4px;
+  height: 28px;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+/* Minus Icon for Zoom Out */
+.zoom-icon-minus {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.minus-horizontal {
+  position: absolute;
+  width: 28px;
+  height: 4px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background: #767676;
+  outline: 2px #767676 solid;
+  outline-offset: -1px;
+}
+
+/* Smooth Zoom Transition */
+.canvas-viewport {
+  transition: transform 0.3s ease;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .freeform-toolbar {
@@ -298,5 +443,10 @@
 
   .toolbar-divider {
     height: 28px;
+  }
+
+  .zoom-controls-container {
+    bottom: 16px;
+    right: 16px;
   }
 }

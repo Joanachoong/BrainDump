@@ -1,0 +1,121 @@
+/* ==================== CUSTOM ZOOM CONTROLS ==================== */
+.zoom-controls-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.zoom-control-btn {
+  width: 48px;
+  height: 48px;
+  background: rgba(44, 44, 44, 0.70);
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.zoom-control-btn:hover:not(.disabled) {
+  background: rgba(54, 54, 54, 0.80);
+}
+
+.zoom-control-btn.active {
+  animation: crossDissolve 0.4s ease;
+}
+
+@keyframes crossDissolve {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.zoom-control-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Zoom Icon Inner Button */
+.zoom-control-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #5C5C5C;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  z-index: 0;
+}
+
+/* Plus Icon for Zoom In */
+.zoom-icon-plus {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plus-horizontal,
+.plus-vertical {
+  position: absolute;
+  background: #999999;
+}
+
+.plus-horizontal {
+  width: 18px;
+  height: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.plus-vertical {
+  width: 3px;
+  height: 18px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Minus Icon for Zoom Out */
+.zoom-icon-minus {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.minus-horizontal {
+  position: absolute;
+  width: 18px;
+  height: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #999999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .zoom-controls-container {
+    bottom: 16px;
+    right: 16px;
+  }
+}
